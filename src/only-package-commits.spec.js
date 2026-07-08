@@ -65,6 +65,24 @@ describe('filter commits', () => {
     );
   });
 
+  it('withFiles returns [] for undefined/empty commits (no crash)', async () => {
+    // Guards the release from crashing when a step runs with no commits
+    // (e.g. success/fail, or when a sibling plugin already threw). Must return
+    // a real array so downstream consumers (logFilteredCommitCount, the real
+    // commit-analyzer) don't blow up on `.length`/iteration.
+    const fromUndefined = await withFiles(undefined);
+    expect(Array.isArray(fromUndefined)).toBe(true);
+    expect(fromUndefined).toHaveLength(0);
+
+    const fromEmpty = await withFiles([]);
+    expect(Array.isArray(fromEmpty)).toBe(true);
+    expect(fromEmpty).toHaveLength(0);
+
+    const fromNull = await onlyPackageCommits(undefined);
+    expect(Array.isArray(fromNull)).toBe(true);
+    expect(fromNull).toHaveLength(0);
+  });
+
   it('should filter 2 commits (folder module2) ', async () => {
     const gitRepo = await initGitRepo(false);
     const commitsToCreate = [

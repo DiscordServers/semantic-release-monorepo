@@ -1,7 +1,7 @@
 import { identity, memoizeWith, pipeP } from 'ramda';
 import pkgUp from 'pkg-up';
-import readPkg from 'read-pkg';
 import path from 'path';
+import { getName } from './package-info.js';
 import pLimit from 'p-limit';
 import createDebug from 'debug';
 import { getCommitFiles, getRoot } from './git-utils.js';
@@ -14,13 +14,23 @@ const memoizedGetCommitFiles = memoizeWith(identity, getCommitFiles);
  * Get the normalized PACKAGE root path, relative to the git PROJECT root.
  */
 const getPackagePath = async () => {
-  const packagePath = await pkgUp();
+  // `pkgUp()` returns null for non-JS packages (e.g. a PHP app with no
+  // package.json). Fall back to the cwd so the package path still resolves
+  // instead of crashing in `path.resolve(null, '..')`.
+  const packagePath = (await pkgUp()) || './package.json';
   const gitRoot = await getRoot();
 
   return path.relative(gitRoot, path.resolve(packagePath, '..'));
 };
 
 const withFiles = async commits => {
+  // A release step can run with no commits (notably `success`/`fail`, or when a
+  // sibling plugin already threw). Guard so we return an empty array rather than
+  // crashing on `undefined.map(...)` and masking the real error.
+  if (!Array.isArray(commits) || commits.length === 0) {
+    return [];
+  }
+
   const limit = pLimit(Number(process.env.SRM_MAX_THREADS) || 500);
   return Promise.all(
     commits.map(commit =>
@@ -69,7 +79,7 @@ const tapA = fn => async x => {
 };
 
 const logFilteredCommitCount = logger => async ({ commits }) => {
-  const { name } = await readPkg();
+  const name = await getName();
 
   logger.log(
     'Found %s commits for package %s since last release',

@@ -1,5 +1,5 @@
-import readPkg from 'read-pkg';
 import { compose } from 'ramda';
+import { getNameSync } from './package-info.js';
 import { wrapStep } from 'semantic-release-plugin-decorators';
 import { withOnlyPackageCommits } from './only-package-commits.js';
 import versionToGitTag from './version-to-git-tag.js';
@@ -53,6 +53,6 @@ const fail = wrapStep(
   }
 );
 
-const tagFormat = `${readPkg.sync().name}-v\${version}`;
+const tagFormat = `${getNameSync()}@\${version}`;
 
 export { analyzeCommits, generateNotes, success, fail, tagFormat };
