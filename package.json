@@ -9,11 +9,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/discordservers/semantic-release-monorepo.git"
+    "url": "git+https://github.com/DiscordServers/semantic-release-monorepo.git"
   },
-  "homepage": "https://github.com/discordservers/semantic-release-monorepo#readme",
+  "homepage": "https://github.com/DiscordServers/semantic-release-monorepo#readme",
   "bugs": {
-    "url": "https://github.com/discordservers/semantic-release-monorepo/issues"
+    "url": "https://github.com/DiscordServers/semantic-release-monorepo/issues"
   },
   "publishConfig": {
     "access": "public"
