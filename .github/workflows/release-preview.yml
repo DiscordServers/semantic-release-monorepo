@@ -6,10 +6,10 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       # semantic-release dry-run workaround https://github.com/semantic-release/semantic-release/issues/1890#issuecomment-974512960
       - run: git checkout -b ${{ github.head_ref }}
       - run: unset GITHUB_ACTIONS && npx semantic-release-github-pr --debug

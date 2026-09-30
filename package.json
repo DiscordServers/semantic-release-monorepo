@@ -16,8 +16,7 @@
     "url": "https://github.com/discordservers/semantic-release-monorepo/issues"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "scripts": {
     "format": "prettier --write --single-quote --trailing-comma es5",
